@@ -7,13 +7,13 @@ interface CartContextType {
   cartItems: MovieList[];
   addToCart: (movie: MovieList) => void;
   removeFromCart: (movieId: number) => void;
+  updatePrice: (movieId: number, newPrice: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<MovieList[]>(() => {
-    // Initialize state from localStorage when component mounts
     if (typeof window !== 'undefined') {
       const savedCart = localStorage.getItem('cart');
       return savedCart ? JSON.parse(savedCart) : [];
@@ -21,7 +21,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return [];
   });
 
-  // Update localStorage whenever cartItems changes
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
@@ -34,8 +33,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCartItems((prev) => prev.filter((item) => item.id !== movieId));
   };
 
+  const updatePrice = (movieId: number, newPrice: number) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === movieId ? { ...item, price: newPrice } : item
+      )
+    );
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updatePrice }}>
       {children}
     </CartContext.Provider>
   );

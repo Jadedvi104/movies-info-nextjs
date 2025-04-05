@@ -6,5 +6,5 @@ export interface MovieList {
   rating: number;
   overview: string;
   genre: string;
-  price: number; // Add this line
+  price?: number; // Optional price property
 }

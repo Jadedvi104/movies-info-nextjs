@@ -1,18 +1,38 @@
+"use client";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function Navbar() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <nav className="bg-gray-900 text-white py-4 px-8">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold">MovieInfo</div>
         
         {/* Search Bar */}
-        <div className="flex-1 max-w-xl mx-8">
+        <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-8">
           <div className="relative">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search movies, TV shows..."
               className="w-full px-4 py-2 bg-gray-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2">
+            <button 
+              type="submit"
+              className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-blue-500"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 text-gray-400"
@@ -29,7 +49,7 @@ export default function Navbar() {
               </svg>
             </button>
           </div>
-        </div>
+        </form>
 
         <ul className="flex space-x-6">
           <li><a href="/" className="hover:text-gray-300">Home</a></li>

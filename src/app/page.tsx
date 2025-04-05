@@ -1,9 +1,11 @@
 "use client";
 
 import Navbar from '@/components/Navbar';
-import BannerSlider from '@/components/BannerSlider';
 import FeaturedLists from '@/components/FeaturedLists';
+import BannerSlider from '@/components/BannerSlider';
 import Footer from '@/components/Footer';
+
+
 
 export default function Home() {
   return (

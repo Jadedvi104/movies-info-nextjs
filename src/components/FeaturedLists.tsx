@@ -1,24 +1,55 @@
-export default function FeaturedLists() {
-  const featuredMovies = [
-    { id: 1, title: "Movie 1", image: "/movie1.jpg" },
-    { id: 2, title: "Movie 2", image: "/movie2.jpg" },
-    { id: 3, title: "Movie 3", image: "/movie3.jpg" },
-    { id: 4, title: "Movie 4", image: "/movie4.jpg" }
-  ];
+import { movieLists } from "@/data/movieLists";
+import Image from "next/image";
+import { MovieList } from "@/types/movie";
 
+interface FeaturedListsProps {
+  lists: MovieList[];
+}
+
+export default function FeaturedLists({ lists }: FeaturedListsProps) {
   return (
-    <section className="max-w-7xl mx-auto py-12 px-4">
-      <h2 className="text-3xl font-bold mb-6">Featured Movies</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {featuredMovies.map((movie) => (
-          <div key={movie.id} className="bg-gray-800 rounded-lg overflow-hidden">
-            <img src={movie.image} alt={movie.title} className="w-full h-48 object-cover" />
-            <div className="p-4">
-              <h3 className="text-white text-lg font-semibold">{movie.title}</h3>
-            </div>
-          </div>
-        ))}
+    <div className="max-w-7xl mx-auto py-8 px-4">
+      <h1 className="text-3xl font-bold mb-6">Featured Lists</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+        {lists.length > 0 &&
+          lists.map((list) => (
+            <section key={list.id} className="mb-12">
+              <h2 className="text-2xl font-bold mb-6">{list.name}</h2>
+              <div
+                key={list.id}
+                className="bg-gray-800 rounded-lg overflow-hidden"
+              >
+                <div className="relative h-[300px]">
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${list.posterPath}`}
+                    alt={list.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-white">
+                    {list.name}
+                  </h3>
+                  <p className="text-gray-400 text-sm mt-2">
+                    {list.releaseDate}
+                  </p>
+                  <div className="flex items-center mt-2">
+                    <span className="text-yellow-400">★</span>
+                    <span className="text-white ml-1">{list.rating}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          ))}
       </div>
-    </section>
+
+      {lists.length === 0 && (
+        <>
+          {" "}
+          <h1>Loading...</h1>{" "}
+        </>
+      )}
+    </div>
   );
 }

@@ -6,7 +6,6 @@ import FeaturedLists from '@/components/FeaturedLists';
 import BannerSlider from '@/components/BannerSlider';
 import Footer from '@/components/Footer';
 import { MovieList } from '@/types/movie';
-import { movieLists } from '@/data/movieLists';
 
 
 export default function Home() {
@@ -24,6 +23,9 @@ export default function Home() {
       posterPath: list.poster_path,
       releaseDate: list.release_date,
       rating: list.vote_average,
+      overview: list.overview,
+      price: list.price,
+      genre: list.genre_ids.join(', '), // Assuming genre_ids is an array
     }));
     console.log("mappedData", mappedData);
     setMovieLists(mappedData);

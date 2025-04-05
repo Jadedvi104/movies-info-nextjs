@@ -4,11 +4,13 @@ import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import CheckoutModal from '@/components/CheckoutModal';
 
 export default function CartPage() {
   const { cartItems, removeFromCart } = useCart();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +33,34 @@ export default function CartPage() {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.price || 1), 0);
+  };
+
+  const calculateDiscount = () => {
+    const itemCount = cartItems.length;
+    const subtotal = calculateTotal();
+
+    if (itemCount >= 5) {
+      return subtotal * 0.20; // 20% discount
+    } else if (itemCount >= 3) {
+      return subtotal * 0.10; // 10% discount
+    }
+    return 0;
+  };
+
+  const calculateFinalTotal = () => {
+    const subtotal = calculateTotal();
+    const discount = calculateDiscount();
+    const tax = (subtotal - discount) * 0.1;
+    return subtotal - discount + tax;
+  };
+
+  const handleCheckout = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmCheckout = () => {
+    alert('Thank you for your purchase!');
+    setIsModalOpen(false);
   };
 
   if (!mounted) {
@@ -84,18 +114,63 @@ export default function CartPage() {
           ))}
           
           <div className="mt-8 border-t border-gray-700 pt-8">
-            <div className="flex justify-between items-center">
-              <span className="text-xl text-white">Total:</span>
-              <span className="text-2xl font-bold text-white">
-                {formatPrice(calculateTotal())}
-              </span>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-black">Subtotal:</span>
+                <span className="text-black">{formatPrice(calculateTotal())}</span>
+              </div>
+
+              {cartItems.length >= 3 && (
+                <div className="flex justify-between items-center text-green-500">
+                  <span>Discount ({cartItems.length >= 5 ? '20%' : '10%'}):</span>
+                  <span>-{formatPrice(calculateDiscount())}</span>
+                </div>
+              )}
+
+              <div className="flex justify-between items-center">
+                <span className="text-black">Tax (10%):</span>
+                <span className="text-black">
+                  {formatPrice((calculateTotal() - calculateDiscount()) * 0.1)}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center text-xl font-bold pt-4 border-t border-gray-700">
+                <span className="text-black">Total:</span>
+                <span className="text-black">{formatPrice(calculateFinalTotal())}</span>
+              </div>
+
+              {cartItems.length < 3 && (
+                <p className="text-sm text-yellow-500 mt-2">
+                  Add {3 - cartItems.length} more items for a 10% discount!
+                </p>
+              )}
+              {cartItems.length >= 3 && cartItems.length < 5 && (
+                <p className="text-sm text-yellow-500 mt-2">
+                  Add {5 - cartItems.length} more items to increase your discount to 20%!
+                </p>
+              )}
+
+              <button 
+                onClick={handleCheckout}
+                className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition-colors duration-200"
+              >
+                Proceed to Checkout
+              </button>
             </div>
-            <button className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg">
-              Proceed to Checkout
-            </button>
           </div>
         </div>
       )}
+
+      <CheckoutModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmCheckout}
+        cartItems={cartItems}
+        calculateTotal={calculateTotal}
+        calculateDiscount={calculateDiscount}
+        calculateFinalTotal={calculateFinalTotal}
+        formatPrice={formatPrice}
+      />
     </div>
   );
 }

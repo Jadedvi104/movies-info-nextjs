@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function BannerSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -7,19 +8,19 @@ export default function BannerSlider() {
   const slides = [
     {
       id: 1,
-      image: "/banner1.jpg",
+      image: "/images/superman-2025.png", 
       title: "Latest Movies",
       description: "Watch the latest blockbusters"
     },
     {
       id: 2,
-      image: "/banner2.jpg",
+      image: "/images/nightmare.png",
       title: "Popular Shows",
       description: "Trending TV series"
     },
     {
       id: 3,
-      image: "/banner3.jpg",
+      image: "/images/tangerin.png",
       title: "Coming Soon",
       description: "Upcoming releases"
     }
@@ -42,12 +43,15 @@ export default function BannerSlider() {
           }`}
         >
           <div className="relative w-full h-full">
-            <img
+            <Image
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-8">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-8 z-10">
               <h2 className="text-4xl text-white font-bold">{slide.title}</h2>
               <p className="text-white mt-2">{slide.description}</p>
             </div>

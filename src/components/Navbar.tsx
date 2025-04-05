@@ -29,7 +29,12 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-900 text-white py-4 px-8">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <div className="text-2xl font-bold">MovieInfo</div>
+        <div 
+          onClick={() => router.push('/')}
+          className="text-2xl font-bold cursor-pointer hover:text-blue-500 transition-colors duration-200"
+        >
+          MovieInfo
+        </div>
         
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-8">

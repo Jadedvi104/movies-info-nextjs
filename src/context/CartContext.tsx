@@ -26,7 +26,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cartItems]);
 
   const addToCart = (movie: MovieList) => {
-    setCartItems((prev) => [...prev, movie]);
+    setCartItems((prev) => {
+      // Check if movie already exists in cart
+      const exists = prev.some(item => item.id === movie.id);
+      if (exists) {
+        return prev; // Don't add if already exists
+      }
+      return [...prev, movie];
+    });
   };
 
   const removeFromCart = (movieId: number) => {

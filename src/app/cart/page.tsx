@@ -83,9 +83,9 @@ export default function CartPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6">
-          {cartItems.map((movie) => (
+          {cartItems.map((movie, index) => (
             <div 
-              key={movie.id} 
+              key={`${movie.id}-${index}`} 
               className="flex bg-gray-800 rounded-lg overflow-hidden"
             >
               <div className="relative w-48 h-72">

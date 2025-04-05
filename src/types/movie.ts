@@ -1,4 +1,3 @@
-
 export interface MovieList {
   id: number;
   name: string;
@@ -6,6 +5,6 @@ export interface MovieList {
   releaseDate: string;
   rating: number;
   overview: string;
-  price: number;
   genre: string;
+  price: number; // Add this line
 }
